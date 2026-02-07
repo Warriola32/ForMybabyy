@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&display=swap" rel="stylesheet">
+
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(to bottom,#1b1f3b,#2c2f5e);
+    color:white;
+    text-align:center;
+    padding:5vw;
+    overflow-x:hidden;
+}
+
+/* Title */
+h1{font-family:'Pacifico',cursive;font-size:7vw;margin-bottom:6vh}
+
+/* Buttons */
+#btnBox{position:relative;height:30vh}
+button{
+    font-size:5vw;padding:1em 2em;border:none;border-radius:20px;cursor:pointer;
+    position:absolute;transition:0.3s;
+}
+#yes{background:#ff4d6d;color:white;left:20%}
+#no{background:white;color:#ff4d6d;left:55%}
+
+/* Countdown */
+#countdown{font-size:10vw;margin-top:4vh}
+
+/* Notification */
+#notif{
+    display:none;background:white;color:black;border-radius:15px;padding:1em;
+    max-width:90vw;margin:4vh auto;animation:slideDown 1s;
+}
+@keyframes slideDown{from{transform:translateY(-40px);opacity:0} to{transform:translateY(0);opacity:1}}
+
+/* Chat */
+#chat{display:none;max-width:90vw;margin:4vh auto}
+.bubble{padding:1em;border-radius:20px;margin:1vh 0;max-width:70%}
+.left{background:#444;margin-right:auto}
+.right{background:#ff4d6d;margin-left:auto}
+
+/* Game */
+#game{display:none;margin-top:5vh}
+#heart{font-size:14vw;cursor:pointer;animation:jump 1s infinite alternate}
+@keyframes jump{from{transform:translateY(0)} to{transform:translateY(-25px)}}
+
+/* Gallery */
+#gallery{display:none;margin-top:6vh}
+.photo-container{margin-top:4vh;cursor:pointer;position:relative}
+.photo-container.locked{filter:blur(50px);}
+.photo-container.locked::after{
+    content:"🔒";position:absolute;inset:0;display:flex;
+    align-items:center;justify-content:center;font-size:10vw;
+}
+.photo{max-width:90vw;border-radius:20px;margin:auto;display:block}
+.caption{margin-top:1vh}
+
+/* Story modal */
+
+#storyModal{
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,0.7);display:flex;
+    align-items:center;justify-content:center;z-index:999;
+}
+#storyBox{
+    background:white;color:black;padding:2em;border-radius:20px;
+    max-width:90vw;animation:pop 0.3s ease;
+}
+#storyBox button{
+    margin-top:3vh;padding:0.8em 2em;border:none;border-radius:20px;
+    background:#ff4d6d;color:white;font-size:4vw;cursor:pointer;
+}
+@keyframes pop{from{transform:scale(0.85);opacity:0} to{transform:scale(1);opacity:1}}
+
+/* Secret */
+#secretBox{display:none;margin-top:10vh;font-size:5vw;background:#ff4d6d;
+padding:1em;border-radius:20px;cursor:pointer}
+#secret{display:none;margin-top:5vh;font-size:4.5vw}
+
+/* Effects */
+.heart,.star,.confetti{position:fixed;pointer-events:none;}
+.heart{font-size:20px;}
+.star{font-size:2vw;}
+.confetti{width:10px;height:10px;}
+
+@keyframes jump{from{transform:translateY(0)} to{transform:translateY(-25px)}}
+
+/* Phone gallery style */
+#phoneGallery{display:none;margin:8vh auto;max-width:360px;
+background:black;border-radius:40px;padding:20px;box-shadow:0 0 40px rgba(0,0,0,0.6);}
+#phoneHeader{color:white;font-size:4vw;margin-bottom:2vh;}
+.phoneGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.phonePhoto{width:100%;border-radius:10px;cursor:pointer;}
+
+/* Lock Screen */
+#lockScreen{
+    margin:10vh auto;
+    max-width:90vw;
+    background:#1b1f3b;
+    padding:2em;
+    border-radius:20px;
+    box-shadow:0 0 30px rgba(255,77,109,0.4);
+    display: none;
+}
+
+#lockScreen input{
+    width:80%;
+    padding:1em;
+    border-radius:15px;
+    border:none;
+    margin:2vh 0;
+    font-size:4vw;
+    text-align:center;
+}
+
+#lockScreen button{
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    border-radius:20px;
+    padding:0.8em 2em;
+    font-size:4vw;
+    cursor:pointer;
+}
+
+#lockError{
+    display:none;
+    color:#ffb3c1;
+    margin-top:1vh;
+}
+
+/* Notebook */
+#notebookPage{
+    display:none;
+    margin:10vh auto;
+    max-width:90vw;
+    background:#fffaf0;
+    color:#333;
+    padding:2em;
+    border-radius:25px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+}
+
+#notebookPage h2{
+    font-family:'Pacifico',cursive;
+    font-size:6vw;
+    color:#ff4d6d;
+    margin-bottom:2vh;
+}
+.notebook{
+    width:90%;
+    max-width:800px;
+    height:65vh;
+    margin:auto;
+    padding:1.2em;
+    background:#fffaf0;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    overflow:hidden; /* IMPORTANT: stops overflow */
+}
+
+.readOnlyNote{
+    height:100%;
+    overflow-y:auto;              /* SCROLL ONLY HERE */
+    padding-right:10px;
+    font-family:'Homemade Apple', cursive;
+    font-size:4vw;
+    line-height:1.6;
+    color:#2b2b2b;
+
+    background:repeating-linear-gradient(
+        #fffaf0,
+        #fffaf0 32px,
+        #f1e3c1 33px
+    );
+
+    white-space:pre-wrap;
+    box-sizing:border-box;
+}
+
+/* Optional: smooth scrollbar */
+.readOnlyNote::-webkit-scrollbar{
+    width:6px;
+}
+.readOnlyNote::-webkit-scrollbar-thumb{
+    background:rgba(0,0,0,0.2);
+    border-radius:10px;
+}
+
+#loveNote{
+    width:100%;
+    height:35vh;
+    border:none;
+    outline:none;
+    resize:none;
+    font-size:4.2vw;
+    padding:1em;
+    border-radius:15px;
+    font-family:'Homemade Apple',cursive;
+    background:repeating-linear-gradient(
+        #fffaf0,
+        #fffaf0 30px,
+        #f3e6c9 31px
+    );
+}
+
+/* Send button */
+#sendBtn{
+    margin-top:3vh;
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    border-radius:50px;
+    padding:0.8em 2.5em;
+    font-size:4.5vw;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+
+/* Heart animation */
+.send-heart{
+    position:absolute;
+    font-size:5vw;
+    animation:flyUp 1.5s ease forwards;
+}
+
+.readOnlyNote{
+    width:100%;
+    min-height:35vh;
+    padding:1em;
+    border-radius:15px;
+    font-family:'Homemade Apple',cursive;
+    font-size:4vw;
+    background:repeating-linear-gradient(
+        #fffaf0,
+        #fffaf0 30px,
+        #f3e6c9 31px
+    );
+    white-space:pre-wrap;
+}
+
+@keyframes flyUp{
+    from{transform:translateY(0) scale(1);opacity:1}
+    to{transform:translateY(-120px) scale(1.8);opacity:0}
+}
+</style>
+</head>
+<body>
+
+<h1 id="mainText">Do you want me to be your Valentine? 😌</h1>
+
+<div id="btnBox">
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+</div>
+
+<h2 id="countdown"></h2>
+
+<div id="notif">
+    💬 <b>This is how we start</b><br>
+    Hi, just came across you on Bumble and I couldn’t risk letting someone
+    like you scroll by without saying hi. Guess I’m a bit of a risk taker 😆
+</div>
+
+<div id="chat">
+    <div class="bubble left">Wow hahaha that's a smooth way to enter my dm 
+        Hello~ hahaha
+    </div>
+    <div class="bubble right">So should I keep the smooth talk going, or switch to mysterious and intriguing?😆 
+        Slr katapos ko lang exam kanina ehhh
+</div>
+    <div class="bubble left">Ooooh oo nga pala di pa tapos a.y. ng iba</div>
+    <div class="bubble right">True, pero i can do both 
+        Study 
+        And 
+        Love you😏</div>
+</div>
+
+<div id="game">
+    <h2>Catch the heart 💗</h2>
+    <div id="heart">❤️</div>
+    <p id="scoreText">Score: 0</p>
+</div>
+
+<div id="storyModal">
+    <div id="storyBox">
+        <h2 id="storyTitle"></h2>
+        <p id="storyText"></p>
+        <button onclick="closeStory()">Close</button>
+    </div>
+</div>
+
+<div id="gallery">
+    <h1>Our Memories 🥰</h1>
+
+    <div class="photo-container" onclick="openStory('That random day 💕','We didn’t plan much that day, but it became one of my favorites.')">
+        <img class="jpg" src="Me and You\624829093_1299780911954390_546099155376669995_n.jpg" width="500px" height="500px" loading="lazy">
+        <div class="caption">That random day</div>
+    </div>
+
+    <div class="photo-container" onclick="openStory('Our laughs 😂','No matter the day, our laughs make everything brighter')">
+        <img class="photo" src="Me and You\621740369_1662361188259507_1599929847787401295_n.jpg" width="500px" height="500px" loading="lazy">
+        <div class="caption">Our laughs</div>
+    </div>
+
+    <div class="photo-container locked" id="lock1">
+        <img class="photo" src="Me and You\622600896_1525975865564770_5984627560863492261_n.jpg" width="500px" height="500px" loading="lazy">
+        <div class="caption">Our Photobooth</div>
+    </div>
+</div>
+
+    <div class="photo-container locked" id="lock2">
+        <img class="photo" src="Me and You\IMG_20250914_225148_896.webp" width="500px" height="500px" loading="lazy">
+        <div class="caption">First Photobooth Together</div>
+    </div>
+</div>
+
+<div id="secretBox" onclick="revealSecret()">tap me 😌</div>
+<div id="secret">
+    You don’t always say it.  
+    You don’t always show it.  
+    But I feel it — and that’s enough for me 💞
+</div>
+
+<!-- Phone gallery -->
+<div id="phoneGallery">
+    <div id="phoneHeader">📱 Photos</div>
+    <div class="phoneGrid">
+        <img class="phonePhoto" src="Me and You\Screenshot 2026-02-05 015940.png" onclick="openStory('Saved memory','This one stayed on my phone.')" loading="lazy">
+        <img class="phonePhoto" src="Me and You\626040948_1395522522254142_5760287580678246611_n.jpg" onclick="openStory('Favorite','I look at this more than I should.')" loading="lazy">
+        <img class="phonePhoto" src="Me and You\625604849_3480319922119296_7764143129827259293_n.jpg" onclick="openStory('Random night','Even on a random night, being with you makes everything feel perfect.')" loading="lazy">
+    </div>
+</div>
+
+
+
+<!-- Password Lock -->
+<div id="lockScreen">
+    <h2>🔒 Message For You</h2>
+    <p>Enter the password 💗</p>
+    <input type="password" id="passwordInput" placeholder="Password">
+    <button onclick="unlockNotebook()">Unlock</button>
+    <p id="lockError">Wrong password 😅 Clue: Date of when we start talking MMDDYYYY</p>
+</div>
+
+<!-- Notebook Page -->
+<div id="notebookPage">
+    <h2>📖 My Letter For You</h2>
+
+    <div id="loveNote" class="readOnlyNote"></div>
+
+</div>
+
+<audio id="bgMusic" loop>
+    <source src="Amiel Sol - Ikaw Lang Patutunguhan (Official Lyric Visualizer).mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const music=document.getElementById("bgMusic");
+let scale=1, score=0;
+
+/* NO button */
+no.onclick=()=>{
+    scale-=0.1;
+    no.style.transform=`scale(${scale})`;
+    no.style.left=Math.random()*70+"%";
+    no.style.top=Math.random()*70+"%";
+};
+
+/* YES */
+yes.onclick=()=>{
+    document.getElementById("mainText").textContent="I knew it 💕";
+    document.getElementById("btnBox").style.display="none";
+    music.play();
+    startCountdown();
+    spawnStars();
+    startHearts();
+    startConfetti();
+
+    setTimeout(unlockMemories,6000);
+    setTimeout(()=>document.getElementById("phoneGallery").style.display="block",12000);
+};
+
+function startCountdown(){
+    let c=3;
+    const cd=document.getElementById("countdown");
+    const timer=setInterval(()=>{
+        cd.textContent=c;
+        c--;
+        if(c<0){
+            clearInterval(timer);
+            cd.style.display="none";
+            document.getElementById("notif").style.display="block";
+            setTimeout(()=>document.getElementById("chat").style.display="block",2000);
+            setTimeout(()=>document.getElementById("game").style.display="block",4000);
+        }
+    },1000);
+}
+
+/* Unlock memories */
+function unlockMemories(){
+    const l1=document.getElementById("lock1");
+    const l2=document.getElementById("lock2");
+    l1.classList.remove("locked");
+    l2.classList.remove("locked");
+    l1.onclick=()=>openStory("Captured forever: my favorite person, and one of my favorite memories");
+    l2.onclick=()=>openStory("First photobooth, first memories and definitely not the last");
+}
+
+/* Story modal */
+function openStory(title,text){
+    document.getElementById("storyTitle").textContent=title;
+    document.getElementById("storyText").textContent=text;
+    document.getElementById("storyModal").style.display="flex";
+}
+function closeStory(){
+    document.getElementById("storyModal").style.display="none";
+}
+
+/* Secret */
+function revealSecret(){
+    document.getElementById("secretBox").style.display="none";
+    document.getElementById("secret").style.display="block";
+}
+
+/* Game */
+document.getElementById("heart").onclick=()=>{
+    score++;
+    document.getElementById("scoreText").textContent="Score: "+score;
+    if(score===5){
+        document.getElementById("game").style.display="none";
+        document.getElementById("gallery").style.display="block";
+        document.getElementById("secretBox").style.display="block";
+         // show notebook lock AFTER gallery
+    setTimeout(() => {
+        document.getElementById("lockScreen").style.display = "block";
+    }, 5000); // delay so it feels intentional
+
+
+    }
+}
+
+/* Effects optimized */
+function startHearts(){
+    const heartsArray=[];
+    function animate(){
+        for(let h of heartsArray){
+            h.style.top=(parseFloat(h.style.top)-0.8)+'px';
+            h.style.opacity=parseFloat(h.style.opacity)-0.01;
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+    setInterval(()=>{
+        const h=document.createElement("div");
+        h.className="heart";
+        h.textContent="❤️";
+        h.style.left=Math.random()*100+"vw";
+        h.style.top=window.innerHeight+'px';
+        h.style.opacity='1';
+        document.body.appendChild(h);
+        heartsArray.push(h);
+        setTimeout(()=>{
+            document.body.removeChild(h);
+            heartsArray.splice(heartsArray.indexOf(h),1);
+        },4000);
+    },700);
+}
+
+function startConfetti(){
+    const confettiArray=[];
+    function animate(){
+        for(let c of confettiArray){
+            c.style.top=(parseFloat(c.style.top)+2)+'px';
+            c.style.transform='rotate('+ (parseFloat(c.dataset.rot)+5) +'deg)';
+            c.dataset.rot=parseFloat(c.dataset.rot)+5;
+            c.style.opacity=parseFloat(c.style.opacity)-0.01;
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+    setInterval(()=>{
+        const c=document.createElement("div");
+        c.className="confetti";
+        c.dataset.rot=0;
+        c.style.left=Math.random()*100+'vw';
+        c.style.top='0px';
+        c.style.backgroundColor=`hsl(${Math.random()*360},100%,50%)`;
+        c.style.opacity='1';
+        document.body.appendChild(c);
+        confettiArray.push(c);
+        setTimeout(()=>{
+            document.body.removeChild(c);
+            confettiArray.splice(confettiArray.indexOf(c),1);
+        },3000);
+    },500);
+}
+
+function spawnStars(){
+    for(let i=0;i<15;i++){
+        const s=document.createElement("div");
+        s.className="star";
+        s.textContent="✨";
+        s.style.left=Math.random()*100+"vw";
+        s.style.top=Math.random()*100+"vh";
+        document.body.appendChild(s);
+    }
+}
+
+/* Password */
+const PASSWORD="06042025";
+
+function unlockNotebook(){
+    const input=document.getElementById("passwordInput").value;
+    if(input===PASSWORD){
+        document.getElementById("lockScreen").style.display="none";
+        document.getElementById("notebookPage").style.display="block";
+    }else{
+        document.getElementById("lockError").style.display="block";
+    }
+}
+
+document.getElementById("loveNote").textContent =
+`Dear Samantha Rivera❤️,
+
+I just want to take a moment to tell you how much you truly mean to me. I love you more than words can ever express, and I want you to know that I notice and appreciate everything you do every little thing, every kind gesture, every effort you make, even when you think I don’t see it. I’m so proud of you, not just for the things you accomplish, but for the amazing person you are strong, caring, beautiful, and inspiring in so many ways.
+
+I know we sometimes have conflicts or fights, and I know that’s never easy. But no matter what happens, my love for you never changes. Every disagreement we have, every misunderstanding, only reminds me that we are learning, growing, and becoming stronger together. I want to face everything in life with you by my side, the good and the bad, because you are the person I want to share my world with.
+
+Thank you for being patient with me, for loving me, and for always showing me your heart. You make my life brighter, happier, and more meaningful just by being in it. I love you with all of me, and I will always support you, celebrate you, and stand by you—no matter what.
+
+You are my heart, my happiness, my everything, and I promise to never take a single moment with you for granted. 💖
+
+Forever yours,
+William Arriola`;
+
+
+/* Send animation */
+function sendLove(){
+    for(let i=0;i<5;i++){
+        const h=document.createElement("div");
+        h.className="send-heart";
+        h.textContent="💗";
+        h.style.left=50+(Math.random()*20-10)+"%";
+        h.style.bottom="10px";
+        document.getElementById("sendBtn").appendChild(h);
+        setTimeout(()=>h.remove(),1500);
+    }
+}
+</script>
+
+</body>
+</html>
